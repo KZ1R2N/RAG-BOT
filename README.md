@@ -99,3 +99,40 @@ https://github.com/KZ1R2N/Chat-Pdf.git
 
 
 Please feel free to contact me if any issue occures regarding the project. 
+
+Answers: 
+
+I have tried various test extraction technique such as pypdf, pdfplumber, pymupdf. pdfplumber works well on tables as our book got complex structure with tables, MCQ and paragraphs. But even it was struggeling to answwering most of the questions. Then tried to do with unstructured pdf but due to specification limitaion it wasn't supported on my PC. 
+Mainly it was problem of the font style. even copy paste in this pdf scrumbled the copied text. If the font was Unicode then it would have worked well with pdfplumber. That's why to extract text I used OCR. For this I have used EasyOCR but it can't recognize all the letter well but pytessaract extracted all the text from the pdf by converting it to high level screen shot and then OCR on it to extract the exact text. 
+I have use parent document retriever. Which have two type of chunks: 
+Child Chunk : A RecursiveCharacterTextSplitter creates small chunks of text (400 characters). These small, focused chunks are embedded and placed into the FAISS vector store. Their main purpose is to be highly effective at matching the specific semantic meaning of a user's query. 
+Parent Chunk: Another RecursiveCharacterTextSplitter defines larger chunks (4000 characters). The smaller "child" chunks are derived from these larger "parent" documents. These parent chunks are kept in a simple document store.
+The retrieval process works in two steps: first, it finds the most relevant small child chunks in the vector store, and then it retrieves the corresponding large parent chunks to send to the language model.
+
+This strategy is highly effective because it leverages the strengths of both small and large chunks, creating a "best of both worlds" scenario:
+
+Precise Retrieval: Small chunks are better for semantic search. Their meaning is concentrated, making it easier for the vector search to find a precise match for a user's query without the "noise" from surrounding, unrelated text.
+
+Rich Context: Language models generate better answers when they have more context. By providing the larger parent chunk, you ensure the model sees the full paragraph or section where the relevant information was found. This prevents the model from giving fragmented answers based on incomplete snippets and helps it produce more coherent and accurate responses.
+
+The comparison process happens in two main steps:
+
+Vector Conversion: I use a Hugging Face embedding model called sentence-transformers/paraphrase-multilingual-mpnet-base-v2. This model's job is to read a piece of text (either the user's query or a document chunk) and convert it into a high-dimensional numerical vector. The key is that semantically similar texts will result in vectors that are close to each other in vector space.
+
+Similarity Search: The FAISS (Facebook AI Similarity Search) library takes the query's vector and efficiently searches through all the stored document chunk vectors. It identifies the chunks whose vectors have the highest cosine similarity to the query vector. In simple terms, it finds the chunks that are closest in meaning to the question being asked.
+
+I chose this specific embedding model and storage setup for a few key reasons:
+
+Multilingual Support is Essential: The source document is in Bengali, but users might ask questions in English or a mix of both. The paraphrase-multilingual-mpnet-base-v2 model is specifically trained to handle multiple languages, making it perfect for accurately matching an English query to a Bengali text chunk.
+
+Speed and Efficiency: FAISS is incredibly fast and memory-efficient. It's designed for rapid similarity searches, even with millions of vectors. For this project, it means the retrieval step is nearly instantaneous and can run locally on a standard CPU (faiss-cpu) without requiring a powerful server or GPU.
+
+High-Quality Semantic Matching: My goal wasn't just to find keywords but to match based on the meaning or intent of the question. Sentence-transformer models are excellent at this, and FAISS is the industry standard for performing the search on the resulting vectors. It's a robust and proven combination for building effective RAG systems.
+
+Query Transformation with MultiQueryRetriever: This is my primary strategy. Instead of taking the user's question at face value, I use the LLM to rewrite it into several different, more specific queries from various perspectives. For example, if a user asks "What about the main character?", the retriever might generate variants like "What are the main character's personality traits?" and "What is the main character's role in the story?". It then searches the document for all of these variants, giving me a much richer set of results.
+
+Semantic Embedding Model: The foundation of the comparison is the paraphrase-multilingual-mpnet-base-v2 model. It converts text into vectors based on meaning, not just keywords. This ensures that even if the user's wording is completely different from the book's, as long as the underlying meaning is similar, it will find a match.
+
+CONTEXT ParentDocumentRetriever: After finding the best small, specific chunks of text (the "child" documents), the retriever fetches the larger "parent" chunk they belong to. This guarantees that the LLM receives a full paragraph for context, not just an isolated sentence, which is crucial for a meaningful interpretation.
+
+Yes the results are accurate. It can asnwer maximum questions correctly. But a better paid Model with good context window, increased limit it would work more efficient. ALso if the pdf was unicoded then by using pdfplumber alone would have bring an amazing results. 
