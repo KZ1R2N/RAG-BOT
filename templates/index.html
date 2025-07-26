@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangla RAG Chatbot</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f4f4f9; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #chat-container { width: 90%; max-width: 600px; height: 90vh; background-color: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        #chat-box { flex-grow: 1; padding: 20px; overflow-y: auto; border-bottom: 1px solid #e0e0e0; display: flex; flex-direction: column;}
+        .user-message, .bot-message { padding: 10px 15px; border-radius: 18px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; }
+        .user-message { background-color: #007bff; color: #fff; align-self: flex-end; margin-left: auto; }
+        .bot-message { background-color: #e9e9eb; color: #000; align-self: flex-start; margin-right: auto; }
+        #input-form { display: flex; padding: 15px; border-top: 1px solid #eee; }
+        #user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 16px; outline: none; }
+        #user-input:focus { border-color: #007bff; }
+        #send-button { background-color: #007bff; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; margin-left: 10px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-box">
+            <div class="bot-message">Hello! Ask me a question about the HSC Bangla 1st Paper book in English or Bengali.</div>
+        </div>
+        <form id="input-form" onsubmit="sendMessage(event)">
+            <input type="text" id="user-input" placeholder="আপনার প্রশ্ন লিখুন..." autocomplete="off">
+            <button id="send-button" type="submit">&#10148;</button>
+        </form>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const inputForm = document.getElementById('input-form');
+        const userInput = document.getElementById('user-input');
+
+        async function sendMessage(event) {
+            event.preventDefault();
+            const messageText = userInput.value.trim();
+            if (messageText === '') return;
+
+            // Display user's message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'user-message';
+            userMessageDiv.textContent = messageText;
+            chatBox.appendChild(userMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            userInput.value = '';
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'bot-message';
+            loadingDiv.textContent = 'Thinking...';
+            chatBox.appendChild(loadingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const formData = new FormData();
+                formData.append('user_input', messageText);
+
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const botHtmlResponse = await response.text();
+
+                loadingDiv.innerHTML = botHtmlResponse;
+
+            } catch (error) {
+                loadingDiv.textContent = 'Error: Could not connect to the server.';
+                console.error('Error:', error);
+            } finally {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
