@@ -100,7 +100,7 @@ https://github.com/KZ1R2N/Chat-Pdf.git
 
 Please feel free to contact me if any issue occures regarding the project. 
 
-Answers: 
+#Answers: 
 
 I have tried various test extraction technique such as pypdf, pdfplumber, pymupdf. pdfplumber works well on tables as our book got complex structure with tables, MCQ and paragraphs. But even it was struggeling to answwering most of the questions. Then tried to do with unstructured pdf but due to specification limitaion it wasn't supported on my PC. 
 Mainly it was problem of the font style. even copy paste in this pdf scrumbled the copied text. If the font was Unicode then it would have worked well with pdfplumber. That's why to extract text I used OCR. For this I have used EasyOCR but it can't recognize all the letter well but pytessaract extracted all the text from the pdf by converting it to high level screen shot and then OCR on it to extract the exact text. 
