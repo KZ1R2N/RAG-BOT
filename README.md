@@ -8,7 +8,7 @@ Make sure your screenshot files are named `screenshot1.png` and `screenshot2.png
 
 | Chat Interface | Another View |
 | :---: | :---: |
-| ![Chat Interface](./SS/screenshot1.png) | ![Another View](./SS/screenshot2.png) |
+| ![Chat Interface](./SS/Image1.png) | ![Another View](./SS/Image2.png) |
 
 ## 📖 About The Project
 
