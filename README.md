@@ -98,4 +98,4 @@ Here I've another project for reference which I had worked on long time ago. Her
 https://github.com/KZ1R2N/Chat-Pdf.git
 
 
-Please feel free to contact me if any issue regarding the project. 
+Please feel free to contact me if any issue occures regarding the project. 
