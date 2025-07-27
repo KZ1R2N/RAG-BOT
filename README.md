@@ -42,11 +42,13 @@ Please install these in your system:
     * [Tesseract Installation Guide]([https://tesseract-ocr.github.io/tessdoc/Installation.html](https://github.com/tesseract-ocr/tesseract.git))
 * On Windows, make sure to note the installation path. Download tessaract from official site or can also easily installed by chocolety.
 * run in powershell
+```sh
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-
-* choco install tesseract-ocr
-
+```
+* Then type and hit enter
+```sh
+choco install tesseract-ocr
+```
 * The code currently points to `C:\Program Files\Tesseract-OCR\tesseract.exe`. If your path is different, update the `TESSERACT_CMD_PATH` variable in `main.py`.
 * Also make sure you have bengali tessdata file in your directory
   `C:\Program Files\Tesseract-OCR\tessdata`
