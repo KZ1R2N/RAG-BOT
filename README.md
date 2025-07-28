@@ -54,7 +54,7 @@ choco install tesseract-ocr
   `C:\Program Files\Tesseract-OCR\tessdata`
   if not please download from here
 ```sh
-https://github.com/tesseract-ocr/tessdata/blob/main/script/Bengali.traineddata.
+https://github.com/tesseract-ocr/tessdata/blob/main/script/Bengali.traineddata
 ```
 
 [ If your tessdata name is `ben.tessdata` then in the code change it to `len=ben` where there is `len=Bengali` for pytessaract ] 
@@ -68,10 +68,10 @@ https://github.com/tesseract-ocr/tessdata/blob/main/script/Bengali.traineddata.
     ```
 
 2.  **Create and Activate a Virtual Environment**
-    * On Windows:
+    * On Windows: ( powershell )
         ```sh
         python -m venv venv
-        venv/scripts/activate  - Powershell
+        venv/scripts/activate 
         ```
     * On macOS/Linux:
         ```sh
